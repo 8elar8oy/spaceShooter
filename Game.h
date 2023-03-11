@@ -30,9 +30,9 @@ public:
 		while (window.isOpen())
 		{
 			checkEvents();
-			update(   );
+			update();
 			checkCollisions();
-			draw(   );
+			draw();
 		}
 	}
 
