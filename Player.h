@@ -7,20 +7,23 @@ private:
 	sf::Texture texture;
 	float speedx;
 	
+
 public:
 	Player() {
-		texture.loadFromFile("playerShip3_green.png");
-		
+		texture.loadFromFile(PLAYER_FILE_NAME);
+
 		sprite.setTexture(texture);
-		sprite.setPosition(WINDOW_WIDTH/2,WINDOW_HEIGHT-100);
-		
+		sf::FloatRect bounds = sprite.getGlobalBounds();
+		sprite.setPosition((WINDOW_WIDTH - bounds.width )/ 2, WINDOW_HEIGHT - bounds.height-10);
+
 	}
+	
 	void update() {
-		float player_size = texture.getSize().x;
+		sf::FloatRect bounds = sprite.getGlobalBounds();
 		float playerx = sprite.getPosition().x;
 		float playery = sprite.getPosition().y;
 		if (playerx <= 0) sprite.setPosition(0.f, playery);
-		if (playerx >= WINDOW_WIDTH-player_size) sprite.setPosition(WINDOW_WIDTH-player_size, playery);
+		if (playerx >= WINDOW_WIDTH - bounds.width) sprite.setPosition(WINDOW_WIDTH - bounds.width, playery);
 		if (Keyboard::isKeyPressed(Keyboard::Left)) speedx = -PLAYER_SPEED;
 		if (Keyboard::isKeyPressed(Keyboard::Right)) speedx = PLAYER_SPEED;
 		sprite.move(speedx, 0.f);
