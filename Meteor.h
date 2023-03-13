@@ -7,29 +7,38 @@ private:
 	sf::Texture texture;
 	float speedx;
 	float speedy;
+	
 
-public:	
+public:
+	
 	
 	static std::string METEOR_FILE_NAME[];
 	Meteor() {
 		srand(time(nullptr));
-		texture.loadFromFile(METEOR_FILE_NAME[rand()%8]);
-		sprite.setTexture(texture);
 		
-		speedx = rand() % 5 -2;
-		speedy = rand()%6+2;
+		
+		speedx = rand() % 5 - 2;
+		speedy = rand() % 6 + 2;
+		texture.loadFromFile(METEOR_FILE_NAME[rand() % 8]);
+		sprite.setTexture(texture);
 		sf::FloatRect bounds = sprite.getGlobalBounds();
 		float x = rand() % (int)(WINDOW_WIDTH - bounds.width);
-		float y = (rand() % (int)(WINDOW_HEIGHT - bounds.height)+bounds.height);
-		sprite.setPosition(x,y);
+		float y = rand() % 200 - (200 + bounds.height);
+		sprite.setPosition(x, y);
+		
 	}
 	void update() {
-		
-		sprite.move(0.f, speedy);
-		if (sprite.getPosition().y >= WINDOW_HEIGHT) {                                          
+		sf::FloatRect bounds = sprite.getGlobalBounds();
+		sprite.move(speedx, speedy);
+		if (sprite.getPosition().y >= WINDOW_HEIGHT || sprite.getPosition().x + bounds.width <= 0 || sprite.getPosition().x >= WINDOW_WIDTH) {
+			
+			speedx = rand() % 5 - 2;
+			speedy = rand() % 6 + 2;
 			texture.loadFromFile(METEOR_FILE_NAME[rand() % 8]);
 			sprite.setTexture(texture);
-			sprite.setPosition(posx_arr[rand() % 8],posy_arr[rand() % 4]);
+			float x = rand() % (int)(WINDOW_WIDTH - bounds.width);
+			float y = rand() % 200 - (200 + bounds.height);
+			sprite.setPosition(x, y);
 		}
 	}
 	sf::Sprite getSprite() {
