@@ -22,18 +22,18 @@ public:
 
 	static std::string METEOR_FILE_NAME[];
 	Meteor() {
-		
+
 		texture.loadFromFile(IMAGES_FOLDER + METEOR_FILE_NAME[rand() % 8]);
 		sprite.setTexture(texture);
-		
+
 		spawn();
 
 	}
 	void update() {
 		sprite.move(speedx, speedy);
 		sf::FloatRect bounds = sprite.getGlobalBounds();
-		
-		if (bounds.top >= WINDOW_HEIGHT || bounds.left  <= -bounds.width || bounds.left >= WINDOW_WIDTH) {
+
+		if (bounds.top >= WINDOW_HEIGHT || bounds.left <= -bounds.width || bounds.left >= WINDOW_WIDTH) {
 			spawn();
 		}
 	}
@@ -41,6 +41,7 @@ public:
 		return sprite;
 	}
 };
-std::string Meteor::METEOR_FILE_NAME[] = { "meteorGrey_tiny1.png","meteorGrey_tiny2.png",
-		"meteorGrey_big1.png","meteorGrey_big2.png", "meteorGrey_med1.png",
-		"meteorGrey_med2.png","meteorGrey_small1.png","meteorGrey_small2.png" };
+std::string Meteor::METEOR_FILE_NAME[] = {	"meteorGrey_tiny1.png",	"meteorGrey_tiny2.png",
+											"meteorGrey_big1.png",	"meteorGrey_big2.png", 
+											"meteorGrey_med1.png",	"meteorGrey_med2.png",
+											"meteorGrey_small1.png","meteorGrey_small2.png" };

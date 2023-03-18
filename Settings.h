@@ -13,3 +13,4 @@ const std::string IMAGES_FOLDER = "image\\";
 const std::string RES_FOLDER = "res\\";
 const std::string FONT_FILE_NAME = "ds-digib.ttf";
 const size_t CHAR_SIZE = 32;
+std::string LAZER_FILE_NAME = "image\\laserRed01.png";
