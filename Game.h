@@ -4,15 +4,15 @@
 #include "Meteor.h"
 #include <vector>
 #include "Lives.h"
-#include "Lazers.h"
+//#include "Lazers.h"
 class Game {
 private:
 	sf::RenderWindow window;
 	Player player;
 	std::vector<Meteor*> meteorSprites;
-	TextObject lives;
+	TextObj lives;
 	sf::RectangleShape rect;
-	
+
 	void checkEvents() {
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -22,9 +22,9 @@ private:
 	}
 	void update() {
 		player.update();
-		for (auto m: meteorSprites)
+		for (auto m : meteorSprites)
 		{
-			m ->update();
+			m->update();
 		}
 		lives.update(std::to_string(player.getLives()));
 	}
@@ -42,18 +42,20 @@ private:
 		window.display();
 	}
 public:
-	Game() : lives(std::to_string(player.getLives()), sf::Vector2f{WINDOW_WIDTH/2,0.f}){
+	Game() : lives(std::to_string(player.getLives()), sf::Vector2f{ WINDOW_WIDTH / 2,0.f }) 
+	{
 		window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE);
 		window.setFramerateLimit(FPS);
-		rect.setFillColor(Color::Green);
-		rect.setSize(Vector2f{ WINDOW_WIDTH, 50 });
-		rect.setPosition(Vector2f{ 0, 0 });
+		
+		//rect.setPosition(Vector2f{ 0, 0 });
 		meteorSprites.reserve(METEOR_QTY);
 		for (int i = 0; i < METEOR_QTY; i++)
 		{
 			Meteor* m = new Meteor();
 			meteorSprites.push_back(m);
 		}
+		rect.setFillColor(Color::Green);
+		rect.setSize(Vector2f{ WINDOW_WIDTH, 50 });
 	}
 	void play() {
 		while (window.isOpen())

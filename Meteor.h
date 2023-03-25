@@ -41,7 +41,7 @@ public:
 		return sprite;
 	}
 };
-std::string Meteor::METEOR_FILE_NAME[] = {	"meteorGrey_tiny1.png",	"meteorGrey_tiny2.png",
-											"meteorGrey_big1.png",	"meteorGrey_big2.png", 
+std::string Meteor::METEOR_FILE_NAME[] = { "meteorGrey_tiny1.png",	"meteorGrey_tiny2.png",
+											"meteorGrey_big1.png",	"meteorGrey_big2.png",
 											"meteorGrey_med1.png",	"meteorGrey_med2.png",
 											"meteorGrey_small1.png","meteorGrey_small2.png" };

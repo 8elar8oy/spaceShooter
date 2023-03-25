@@ -2,12 +2,12 @@
 #include "windows.h"
 #include "settings.h"
 
-class TextObject {
+class TextObj {
 private:
 	sf::Font font;
 	sf::Text text;
 public:
-	TextObject(std::string str, sf::Vector2f pos) {
+	TextObj(std::string str, sf::Vector2f pos) {
 		font.loadFromFile(RES_FOLDER + FONT_FILE_NAME);
 		text.setString(str);
 		text.setFont(font);
@@ -22,3 +22,4 @@ public:
 	sf::Text getText() { return text; }
 
 };
+
