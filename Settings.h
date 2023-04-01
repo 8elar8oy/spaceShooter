@@ -14,3 +14,5 @@ const std::string RES_FOLDER = "res\\";
 const std::string FONT_FILE_NAME = "ds-digib.ttf";
 const size_t CHAR_SIZE = 32;
 std::string LASER_FILE_NAME = "image\\laserRed01.png";
+sf::Vector2f LIFES_POS = sf::Vector2f{ WINDOW_WIDTH / 2,0.f };
+sf::Vector2f SCORE_POS = sf::Vector2f{ 0.f,0.f };

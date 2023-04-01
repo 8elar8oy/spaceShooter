@@ -1,10 +1,10 @@
-#pragma once
+﻿#pragma once
 #include "Settings.h"
 #include "Player.h"
 #include "Meteor.h"
 #include <vector>
-#include "Lives.h"
-//#include "Lazers.h"
+#include "textobj.h"
+
 class Game {
 private:
 	sf::RenderWindow window;
@@ -12,7 +12,7 @@ private:
 	std::vector<Meteor*> meteorSprites;
 	TextObj lives;
 	sf::RectangleShape rect;
-
+	TextObj score;
 	void checkEvents() {
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -27,8 +27,29 @@ private:
 			m->update();
 		}
 		lives.update(std::to_string(player.getLives()));
+		score.update(std::to_string(player.getScore()));
 	}
-	void checkCollisions() {}
+	void checkCollisions() {
+		sf::FloatRect playerHitBox = player.getHitBox();
+		auto laserSprites = player.getLasers();
+		for (auto& meteor : meteorSprites) {
+			sf::FloatRect meteorHitBox = meteor->getHitBox();
+			if (meteorHitBox.intersects(playerHitBox)) {
+				meteor->spawn();
+				player.decLives(meteor->getDamage());
+			}
+			for (auto& laser : (*laserSprites)) {
+				sf::FloatRect laserHitBox = laser->getHitBox();
+				if (laserHitBox.intersects(meteorHitBox)) {
+					player.incScore(meteor->getValue());
+					meteor->spawn();
+					laser->setHit();
+				}
+			}
+		}
+		(*laserSprites).remove_if([](Laser* laser) { return laser->isHited(); });
+	}
+	
 	void draw() {
 		window.clear();
 		player.draw(window);
@@ -38,16 +59,14 @@ private:
 		}
 		window.draw(rect);
 		window.draw(lives.getText());
-
+		window.draw(score.getText());
 		window.display();
 	}
 public:
-	Game() : lives(std::to_string(player.getLives()), sf::Vector2f{ WINDOW_WIDTH / 2,0.f }) 
+	Game() : lives(std::to_string(player.getLives()), LIFES_POS), score(std::to_string(player.getScore()), SCORE_POS)
 	{
 		window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE);
 		window.setFramerateLimit(FPS);
-		
-		//rect.setPosition(Vector2f{ 0, 0 });
 		meteorSprites.reserve(METEOR_QTY);
 		for (int i = 0; i < METEOR_QTY; i++)
 		{
@@ -58,7 +77,7 @@ public:
 		rect.setSize(Vector2f{ WINDOW_WIDTH, 50 });
 	}
 	void play() {
-		while (window.isOpen())
+		while (window.isOpen() && player.isAlive())
 		{
 			checkEvents();
 			update();
