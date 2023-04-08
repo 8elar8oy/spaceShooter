@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Settings.h"
 #include "Player.h"
 #include "Meteor.h"
@@ -14,7 +14,7 @@ private:
 	sf::RectangleShape rect;
 	TextObj score;
 	std::list<Bonus*> bonusSprites;
-	
+
 	void checkEvents() {
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -34,7 +34,7 @@ private:
 		{
 			b->update();
 		}
-		
+
 	}
 	void checkCollisions() {
 		sf::FloatRect playerHitBox = player.getHitBox();
@@ -59,11 +59,40 @@ private:
 					}
 
 				}
-				
-			}
 
+			}
+			for (auto& bonus : bonusSprites )
+			{
+				sf::FloatRect bonusHitBox = bonus->getHitBox();
+				if (bonusHitBox.intersects(playerHitBox)) {
+					switch (bonus.)
+					{
+					
+					if ()0) {
+						player.actThreeLasers();
+						bonus->setDel();
+						//bonus->act(player);
+					}
+					if ((Bonus::BonusType)1) {
+						player.incLives();
+						bonus->setDel();
+						//bonus->act(player);
+					}
+					//if ((Bonus::BonusType)0) {
+					//	player.actThreeLasers();
+					//	bonus->setDel();
+					//	//bonus->act(player);
+					//}
+					//
+				
+				}
+			}
 		}
+
 		(*laserSprites).remove_if([](Laser* laser) { return laser->isHited(); });
+		(*laserSprites).remove_if([](Laser* laser) { return laser->offScreen(); });
+		bonusSprites.remove_if([](Bonus* bonus) { return bonus->offScreen(); });	
+		bonusSprites.remove_if([](Bonus* bonus) {return bonus->isToDel(); });
 	}
 
 	void draw() {

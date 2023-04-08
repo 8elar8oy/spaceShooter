@@ -1,6 +1,7 @@
-#pragma once
+﻿#pragma once
 #include "settings.h"
 #include "Lazers.h"
+#include "Bonus.h"
 #include <windows.h>
 #include <list>
 class Player {
@@ -14,7 +15,7 @@ private:
 	std::list<Laser*> lasers;
 	sf::Clock timer;
 	sf::FloatRect bounds;
-
+	bool threeLasers = false;
 public:
 	Player() {
 		texture.loadFromFile(PLAYER_FILE_NAME);
@@ -22,7 +23,7 @@ public:
 		bounds = sprite.getGlobalBounds();
 
 		sprite.setPosition((WINDOW_WIDTH - bounds.width) / 2, WINDOW_HEIGHT - bounds.height - 10);
-		sprite.setOrigin(bounds.width / 2, bounds.height / 2);
+	
 		timer.restart();
 	}
 
@@ -62,7 +63,7 @@ public:
 	}
 	sf::FloatRect getHitBox() { return sprite.getGlobalBounds(); }
 	int getLives() { return lives; }
-	void incLives() { lives++; }
+	void incLives() { if (lives < 300)lives += 50; if (lives >= 300) lives = 100; }
 	void decLives(int damage) { lives -= damage; }
 
 	int getScore() { return score; }
@@ -71,13 +72,27 @@ public:
 	bool isAlive() { return lives > 0; }
 	void fire() {
 		int time = timer.getElapsedTime().asMilliseconds();
-		if (time > 200) {
-			sf::Vector2f laserPos{ sprite.getPosition().x + bounds.width / 2, sprite.getPosition().y };
-			Laser* l = new Laser(sprite.getPosition());
-			lasers.push_back(l);
-			timer.restart();
-		}
+		
+			if (time > 200) {
+				if (threeLasers) {
+					for (int i = 0; i < 3; i++){
+							sf::Vector2f laserPos{ sprite.getPosition().x + bounds.width / 2*i, sprite.getPosition().y };
+							Laser* l = new Laser(laserPos);
+							lasers.push_back(l);
+							timer.restart();
+					}
+				}
+				else{
+					sf::Vector2f laserPos{ sprite.getPosition().x + bounds.width/2, sprite.getPosition().y };
+					Laser* l = new Laser(laserPos);
+					lasers.push_back(l);
+					timer.restart();
+				}
+			}
+		
 
 	}
 	std::list<Laser*>* getLasers() { return &lasers; }
+	void actThreeLasers() { threeLasers = true; }
+	void deactThreeLasers() { threeLasers = false; }
 };

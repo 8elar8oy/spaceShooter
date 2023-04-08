@@ -29,4 +29,9 @@ public:
 		hit = true;
 	}
 	bool isHited() { return hit; }
+	bool offScreen() {
+		if (sprite.getPosition().y < 0) return true;
+		else return false;
+
+	}
 };
