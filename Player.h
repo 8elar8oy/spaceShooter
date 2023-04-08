@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "settings.h"
 #include "Lazers.h"
 #include <windows.h>
@@ -10,7 +10,7 @@ private:
 	float speedx = 0.f;
 	int lives = 300;
 	int score = 0;
-	
+
 	std::list<Laser*> lasers;
 	sf::Clock timer;
 	sf::FloatRect bounds;
@@ -20,7 +20,7 @@ public:
 		texture.loadFromFile(PLAYER_FILE_NAME);
 		sprite.setTexture(texture);
 		bounds = sprite.getGlobalBounds();
-		
+
 		sprite.setPosition((WINDOW_WIDTH - bounds.width) / 2, WINDOW_HEIGHT - bounds.height - 10);
 		sprite.setOrigin(bounds.width / 2, bounds.height / 2);
 		timer.restart();
@@ -29,7 +29,7 @@ public:
 	void update() {
 		sf::Clock timer;
 		float time = timer.getElapsedTime().asMilliseconds();
-		
+
 		float playerx = sprite.getPosition().x;
 		float playery = sprite.getPosition().y;
 		if (playerx <= bounds.width / 2) { sprite.setPosition(bounds.width / 2, playery); }
@@ -63,11 +63,11 @@ public:
 	sf::FloatRect getHitBox() { return sprite.getGlobalBounds(); }
 	int getLives() { return lives; }
 	void incLives() { lives++; }
-	void decLives(int damage) { lives-= damage; }
-	
+	void decLives(int damage) { lives -= damage; }
+
 	int getScore() { return score; }
-	void incScore(int value) { score+= value; }
-	
+	void incScore(int value) { score += value; }
+
 	bool isAlive() { return lives > 0; }
 	void fire() {
 		int time = timer.getElapsedTime().asMilliseconds();

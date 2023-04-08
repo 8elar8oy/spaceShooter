@@ -48,6 +48,7 @@ public:
 	sf::FloatRect getHitBox() { return sprite.getGlobalBounds(); }
 	int getDamage() { return damage; }
 	int getValue() { return value; }
+	sf::Vector2f getPosition() { return sprite.getPosition(); };
 };
 std::string Meteor::METEOR_FILE_NAME[] = { "meteorGrey_tiny1.png",	"meteorGrey_tiny2.png",
 											"meteorGrey_big1.png",	"meteorGrey_big2.png",

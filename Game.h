@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 #include "Settings.h"
 #include "Player.h"
 #include "Meteor.h"
 #include <vector>
-#include "textobj.h"
-
+#include "Lives.h"
+#include "Bonus.h"
 class Game {
 private:
 	sf::RenderWindow window;
@@ -13,6 +13,8 @@ private:
 	TextObj lives;
 	sf::RectangleShape rect;
 	TextObj score;
+	std::list<Bonus*> bonusSprites;
+	
 	void checkEvents() {
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -22,12 +24,17 @@ private:
 	}
 	void update() {
 		player.update();
-		for (auto m : meteorSprites)
+		for (auto& m : meteorSprites)
 		{
 			m->update();
 		}
 		lives.update(std::to_string(player.getLives()));
 		score.update(std::to_string(player.getScore()));
+		for (auto& b : bonusSprites)
+		{
+			b->update();
+		}
+		
 	}
 	void checkCollisions() {
 		sf::FloatRect playerHitBox = player.getHitBox();
@@ -44,12 +51,21 @@ private:
 					player.incScore(meteor->getValue());
 					meteor->spawn();
 					laser->setHit();
+					int chance = rand() % BONUS_RANGE;
+					if (chance < BONUS_CHANCE) {
+						int bonus_index = rand() % 3;
+						Bonus* bonus = new Bonus(((Bonus::BonusType)bonus_index), meteor->getPosition());
+						bonusSprites.push_back(bonus);
+					}
+
 				}
+				
 			}
+
 		}
 		(*laserSprites).remove_if([](Laser* laser) { return laser->isHited(); });
 	}
-	
+
 	void draw() {
 		window.clear();
 		player.draw(window);
@@ -60,6 +76,10 @@ private:
 		window.draw(rect);
 		window.draw(lives.getText());
 		window.draw(score.getText());
+		for (auto& b : bonusSprites)
+		{
+			b->draw(window);
+		}
 		window.display();
 	}
 public:
