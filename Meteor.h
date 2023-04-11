@@ -1,58 +1,55 @@
 #pragma once
 #include "settings.h"
-#include "ctime"
-#include <vector>
+
 class Meteor {
 private:
 	sf::Sprite sprite;
 	sf::Texture texture;
-	float speedx;
-	float speedy;
-	static int arrDamage[];
-	static int arrValue[];
+	float speedx, speedy;
 	int damage;
-	int value;
+
 
 public:
-	void spawn() {
-		speedx = rand() % 5 - 2;
-		speedy = rand() % 6 + 2;
-		sf::FloatRect bounds = sprite.getGlobalBounds();
-		float x = rand() % (int)(WINDOW_WIDTH - bounds.width);
-		float y = rand() % 200 - (200 + bounds.height);
-		sprite.setPosition(x, y);
-	}
-
-	static std::string METEOR_FILE_NAME[];
+	static std::string mFileNames[];
+	static int mDamage[];
 	Meteor() {
-		int index = rand() % 8;
-		damage = arrDamage[index];
-		value = arrValue[index];
-		texture.loadFromFile(IMAGES_FOLDER + METEOR_FILE_NAME[index]);
+		int index = rand() % METEOR_TYPES_QTY;
+		damage = mDamage[index];
+		texture.loadFromFile(IMAGES_FOLDER + mFileNames[index]);
 		sprite.setTexture(texture);
-
 		spawn();
-
 	}
+
 	void update() {
 		sprite.move(speedx, speedy);
 		sf::FloatRect bounds = sprite.getGlobalBounds();
-
-		if (bounds.top >= WINDOW_HEIGHT || bounds.left <= -bounds.width || bounds.left >= WINDOW_WIDTH) {
+		if (bounds.left < -bounds.width || bounds.left > WINDOW_WIDTH ||
+			bounds.top > WINDOW_HEIGHT)
+		{
 			spawn();
 		}
 	}
-	sf::Sprite getSprite() {
-		return sprite;
-	}
+
+	sf::Sprite getSprite() { return sprite; }
+
 	sf::FloatRect getHitBox() { return sprite.getGlobalBounds(); }
+
+	void spawn() {
+		speedy = rand() % 6 + 2;
+		speedx = rand() % 5 - 2;
+		sf::FloatRect bounds = sprite.getGlobalBounds();
+		float x = rand() % (int)(WINDOW_WIDTH - bounds.width);
+		float y = -(rand() % (int)(WINDOW_HEIGHT - bounds.height) + bounds.height);
+		sprite.setPosition(x, y);
+	}
+
 	int getDamage() { return damage; }
-	int getValue() { return value; }
-	sf::Vector2f getPosition() { return sprite.getPosition(); };
+
+	sf::Vector2f getPosition() { return sprite.getPosition(); }
 };
-std::string Meteor::METEOR_FILE_NAME[] = { "meteorGrey_tiny1.png",	"meteorGrey_tiny2.png",
+
+std::string Meteor::mFileNames[] = { "meteorGrey_tiny1.png",	"meteorGrey_tiny2.png",
 											"meteorGrey_big1.png",	"meteorGrey_big2.png",
 											"meteorGrey_med1.png",	"meteorGrey_med2.png",
 											"meteorGrey_small1.png","meteorGrey_small2.png" };
-int Meteor::arrDamage[] = { 5,5,20,20,15,15,10,10 };
-int Meteor::arrValue[] = { 1,1,4,4,3,3,2,2 };
+int Meteor::mDamage[] = { 30,30,20,20,10,10,5,5 };

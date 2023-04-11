@@ -1,130 +1,109 @@
-﻿#pragma once
-#include "Settings.h"
-#include "Player.h"
-#include "Meteor.h"
+﻿
+#pragma once
+#include "settings.h"
+#include "player.h"
+#include "meteor.h"
 #include <vector>
 #include "Lives.h"
-#include "Bonus.h"
+#include "bonus.h"
+
 class Game {
 private:
 	sf::RenderWindow window;
 	Player player;
 	std::vector<Meteor*> meteorSprites;
-	TextObj lives;
-	sf::RectangleShape rect;
 	TextObj score;
+	sf::RectangleShape rect;
 	std::list<Bonus*> bonusSprites;
 
 	void checkEvents() {
 		sf::Event event;
 		while (window.pollEvent(event))
-		{
-			if (event.type == Event::Closed)	window.close();
-		}
+			if (event.type == sf::Event::Closed) window.close();
 	}
+
 	void update() {
 		player.update();
-		for (auto& m : meteorSprites)
-		{
+		for (auto& m : meteorSprites) {
 			m->update();
 		}
-		lives.update(std::to_string(player.getLives()));
 		score.update(std::to_string(player.getScore()));
-		for (auto& b : bonusSprites)
-		{
-			b->update();
+		for (auto& bonus : bonusSprites) {
+			bonus->update();
 		}
-
 	}
+
 	void checkCollisions() {
 		sf::FloatRect playerHitBox = player.getHitBox();
 		auto laserSprites = player.getLasers();
 		for (auto& meteor : meteorSprites) {
+			
 			sf::FloatRect meteorHitBox = meteor->getHitBox();
 			if (meteorHitBox.intersects(playerHitBox)) {
 				meteor->spawn();
-				player.decLives(meteor->getDamage());
+				player.receiveDamage(meteor->getDamage());
 			}
+			
 			for (auto& laser : (*laserSprites)) {
 				sf::FloatRect laserHitBox = laser->getHitBox();
+			
 				if (laserHitBox.intersects(meteorHitBox)) {
-					player.incScore(meteor->getValue());
+					
 					meteor->spawn();
+					player.incScore(meteor->getDamage());
 					laser->setHit();
 					int chance = rand() % BONUS_RANGE;
+					int BonusType = rand() % Bonus::BonusType::BONUSES_TYPE;
 					if (chance < BONUS_CHANCE) {
-						int bonus_index = rand() % 3;
-						Bonus* bonus = new Bonus(((Bonus::BonusType)bonus_index), meteor->getPosition());
+						Bonus* bonus = new Bonus(((Bonus::BonusType)BonusType),meteor->getPosition());
 						bonusSprites.push_back(bonus);
 					}
-
 				}
-
 			}
-			for (auto& bonus : bonusSprites )
-			{
+
+			for (auto& bonus : bonusSprites) {
 				sf::FloatRect bonusHitBox = bonus->getHitBox();
 				if (bonusHitBox.intersects(playerHitBox)) {
-					switch (bonus.)
-					{
-					
-					if ()0) {
-						player.actThreeLasers();
-						bonus->setDel();
-						//bonus->act(player);
-					}
-					if ((Bonus::BonusType)1) {
-						player.incLives();
-						bonus->setDel();
-						//bonus->act(player);
-					}
-					//if ((Bonus::BonusType)0) {
-					//	player.actThreeLasers();
-					//	bonus->setDel();
-					//	//bonus->act(player);
-					//}
-					//
-				
+					bonus->act(player);
+					bonus->setDel();
 				}
 			}
 		}
-
-		(*laserSprites).remove_if([](Laser* laser) { return laser->isHited(); });
-		(*laserSprites).remove_if([](Laser* laser) { return laser->offScreen(); });
-		bonusSprites.remove_if([](Bonus* bonus) { return bonus->offScreen(); });	
+		(*laserSprites).remove_if([](Laser* laser) {return laser->isHited(); });
+		(*laserSprites).remove_if([](Laser* laser) {return laser->offScreen(); });
+		bonusSprites.remove_if([](Bonus* bonus) {return bonus->offScreen(); });
 		bonusSprites.remove_if([](Bonus* bonus) {return bonus->isToDel(); });
 	}
 
 	void draw() {
 		window.clear();
-		player.draw(window);
-		for (auto m : meteorSprites)
-		{
+		for (auto m : meteorSprites) {
 			window.draw(m->getSprite());
 		}
 		window.draw(rect);
-		window.draw(lives.getText());
+		player.draw(window);
 		window.draw(score.getText());
-		for (auto& b : bonusSprites)
-		{
-			b->draw(window);
+		for (auto& bonus : bonusSprites) {
+			bonus->draw(window);
 		}
+		
 		window.display();
 	}
+
 public:
-	Game() : lives(std::to_string(player.getLives()), LIFES_POS), score(std::to_string(player.getScore()), SCORE_POS)
+	Game() :
+		window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE),
+		score(std::to_string(player.getScore()), sf::Vector2f{ WINDOW_WIDTH / 2,0.f })
 	{
-		window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE);
 		window.setFramerateLimit(FPS);
 		meteorSprites.reserve(METEOR_QTY);
-		for (int i = 0; i < METEOR_QTY; i++)
-		{
-			Meteor* m = new Meteor();
-			meteorSprites.push_back(m);
+		for (int i = 0; i < METEOR_QTY; i++) {
+			meteorSprites.push_back(new Meteor());
 		}
-		rect.setFillColor(Color::Green);
-		rect.setSize(Vector2f{ WINDOW_WIDTH, 50 });
+		rect.setFillColor(sf::Color::Green);
+		rect.setSize(sf::Vector2f{ WINDOW_WIDTH, 40.f });
 	}
+
 	void play() {
 		while (window.isOpen() && player.isAlive())
 		{
@@ -134,5 +113,4 @@ public:
 			draw();
 		}
 	}
-
 };
