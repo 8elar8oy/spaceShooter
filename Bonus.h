@@ -1,9 +1,10 @@
 #pragma once
 #include "settings.h"
+#include "Shiled.h"
 
 class Bonus {
 public:
-	enum BonusType { MULTI_LASER, HP, SHIELD ,BONUSES_TYPE};
+	enum BonusType { MULTI_LASER, HP, SHIELD, BONUSES_TYPE };
 	Bonus(BonusType type, sf::Vector2f position);
 	void update();
 	void draw(sf::RenderWindow& window);
@@ -12,10 +13,11 @@ public:
 	void setDel();
 	bool isToDel();
 	bool offScreen();
-	void act(Player& player);
+	void act(Player& player );
 private:
 	sf::Sprite sprite;
 	sf::Texture texture;
+	sf::Clock timer;
 	BonusType type;
 	bool del = false;
 };
@@ -42,6 +44,7 @@ Bonus::Bonus(BonusType type, sf::Vector2f position) {
 		sprite.setPosition(position);
 		break;
 	}
+	timer.restart();
 }
 
 void Bonus::update() { sprite.move(0.f, BONUS_SPEED); }
@@ -61,10 +64,14 @@ bool Bonus::offScreen() {
 	return false;
 }
 
-void Bonus::act(Player& player) {
+void Bonus::act(Player& player ) {
+	
 	switch (type) {
 	case MULTI_LASER:
+		timer.restart();
 		player.activateThreeLasers();
+
+		
 		break;
 
 	case HP:
@@ -72,10 +79,8 @@ void Bonus::act(Player& player) {
 		break;
 
 	case SHIELD:
-		texture.loadFromFile(IMAGES_FOLDER + MULTI_LASER_BONUS_FILE_NAME);
-		sprite.setTexture(texture);
-		sprite.setPosition(player.getPos());
+		player.activateShield();
 		break;
-		
+
 	}
 }

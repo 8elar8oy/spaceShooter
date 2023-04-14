@@ -1,4 +1,3 @@
-﻿
 #pragma once
 #include "settings.h"
 #include "player.h"
@@ -37,25 +36,25 @@ private:
 		sf::FloatRect playerHitBox = player.getHitBox();
 		auto laserSprites = player.getLasers();
 		for (auto& meteor : meteorSprites) {
-			
+
 			sf::FloatRect meteorHitBox = meteor->getHitBox();
 			if (meteorHitBox.intersects(playerHitBox)) {
 				meteor->spawn();
 				player.receiveDamage(meteor->getDamage());
 			}
-			
+
 			for (auto& laser : (*laserSprites)) {
 				sf::FloatRect laserHitBox = laser->getHitBox();
-			
+
 				if (laserHitBox.intersects(meteorHitBox)) {
-					
+
 					meteor->spawn();
 					player.incScore(meteor->getDamage());
 					laser->setHit();
 					int chance = rand() % BONUS_RANGE;
 					int BonusType = rand() % Bonus::BonusType::BONUSES_TYPE;
 					if (chance < BONUS_CHANCE) {
-						Bonus* bonus = new Bonus(((Bonus::BonusType)BonusType),meteor->getPosition());
+						Bonus* bonus = new Bonus(((Bonus::BonusType)BonusType), meteor->getPosition());
 						bonusSprites.push_back(bonus);
 					}
 				}
@@ -86,7 +85,7 @@ private:
 		for (auto& bonus : bonusSprites) {
 			bonus->draw(window);
 		}
-		
+
 		window.display();
 	}
 

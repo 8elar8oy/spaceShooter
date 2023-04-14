@@ -15,7 +15,10 @@ private:
 	TextObj hpText;
 	sf::FloatRect bounds;
 	sf::Clock timer;
+	sf::Clock timer2;
 	bool threeLasers = false;
+	bool shieldAct = false;
+
 
 public:
 	Player() : hpText(std::to_string(hp), sf::Vector2f(0.f, 0.f)) {
@@ -26,6 +29,8 @@ public:
 			(WINDOW_WIDTH - bounds.width) / 2,
 			WINDOW_HEIGHT - bounds.height - 50.f
 		);
+		
+		
 		timer.restart();
 	}
 
@@ -53,7 +58,9 @@ public:
 		for (auto laser : lasers) {
 			laser->update();
 		}
+		
 		hpText.update("HP:" + std::to_string(hp));
+		
 	}
 
 	void draw(sf::RenderWindow& window) {
@@ -61,43 +68,57 @@ public:
 		for (auto laser : lasers) {
 			window.draw(laser->getSprite());
 		}
+		
+		
 		window.draw(hpText.getText());
 	}
 
 	int getScore() { return score; }
-	void incScore(int damage) { score = score +damage; }
+	void incScore(int damage) { score = score + damage; }
 	void decScore() { score--; }
-
+	int getSpeed() { return speedx; }
 	void fire() {
 		int now = timer.getElapsedTime().asMilliseconds();
+		int now1 = timer2.getElapsedTime().asSeconds();
 		if (now > FIRE_COOLDOWN) {
 			sf::Vector2f centralLaserPos{ sprite.getPosition().x + bounds.width / 2,  sprite.getPosition().y };
 			Laser* centralLaser = new Laser(centralLaserPos);
 			lasers.push_back(centralLaser);
+			
 			if (threeLasers) {
-				sf::Vector2f leftLaserPos{ sprite.getPosition().x,
+				if (now1 < 10) {
+					sf::Vector2f leftLaserPos{ sprite.getPosition().x,
 					sprite.getPosition().y + bounds.height / 2 };
-				Laser* leftLaser = new Laser(leftLaserPos);
-				lasers.push_back(leftLaser);
+					Laser* leftLaser = new Laser(leftLaserPos);
+					lasers.push_back(leftLaser);
 
-				sf::Vector2f rightLaserPos{ sprite.getPosition().x + bounds.width,
+					sf::Vector2f rightLaserPos{ sprite.getPosition().x + bounds.width,
 					sprite.getPosition().y + bounds.height / 2 };
-				Laser* rightLaser = new Laser(rightLaserPos);
-				lasers.push_back(rightLaser);
+					Laser* rightLaser = new Laser(rightLaserPos);
+					lasers.push_back(rightLaser);
+				}
+				else {
+					deactivateThreeLasers();
+					timer2.restart();
+				}
+				
 			}
 			timer.restart();
 		}
 	}
+	
 
 
 	sf::FloatRect getHitBox() { return sprite.getGlobalBounds(); }
 	bool isDead() { return hp <= 0; }
 	bool isAlive() { return hp > 0; }
 	void receiveDamage(int damage) { hp -= damage; }
-	void incLives() { hp += 50;  if (hp > 100) { hp = 100; } }
+	void incLives() {   hp += 25; if (hp > 100) { hp = 100; } }
 	std::list<Laser*>* getLasers() { return &lasers; }
 	sf::Vector2f getPos() { return sprite.getPosition(); }
 	void activateThreeLasers() { threeLasers = true; }
-
 	void deactivateThreeLasers() { threeLasers = false; }
+	void activateShield() { shieldAct = true; }
+	void deactivateShield() { shieldAct = false; }
 };
+
