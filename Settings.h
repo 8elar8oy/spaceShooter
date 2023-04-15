@@ -24,7 +24,7 @@ const std::string LASER_FILE_NAME = "laserRed01.png";
 
 const float BONUS_SPEED = 10.f;
 const int BONUS_RANGE = 10000;
-const int BONUS_CHANCE = 10000;
+const int BONUS_CHANCE = 1500;
 
 const std::string MULTI_LASER_BONUS_FILE_NAME = "things_gold.png";
 std::string HP_BONUS_FILE_NAME = "pill_red.png";

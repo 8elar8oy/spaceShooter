@@ -1,6 +1,6 @@
 #pragma once
 #include "settings.h"
-#include "Shiled.h"
+
 
 class Bonus {
 public:
@@ -13,11 +13,11 @@ public:
 	void setDel();
 	bool isToDel();
 	bool offScreen();
-	void act(Player& player );
+	void act(Player& player);
 private:
 	sf::Sprite sprite;
 	sf::Texture texture;
-	sf::Clock timer;
+	//sf::Clock timer;
 	BonusType type;
 	bool del = false;
 };
@@ -44,7 +44,7 @@ Bonus::Bonus(BonusType type, sf::Vector2f position) {
 		sprite.setPosition(position);
 		break;
 	}
-	timer.restart();
+	//timer.restart();
 }
 
 void Bonus::update() { sprite.move(0.f, BONUS_SPEED); }
@@ -64,14 +64,14 @@ bool Bonus::offScreen() {
 	return false;
 }
 
-void Bonus::act(Player& player ) {
-	
+void Bonus::act(Player& player) {
+
 	switch (type) {
 	case MULTI_LASER:
-		timer.restart();
+		//timer.restart();
 		player.activateThreeLasers();
 
-		
+
 		break;
 
 	case HP:
