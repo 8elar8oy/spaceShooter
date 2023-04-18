@@ -30,3 +30,5 @@ const std::string MULTI_LASER_BONUS_FILE_NAME = "things_gold.png";
 std::string HP_BONUS_FILE_NAME = "pill_red.png";
 std::string SHIELD_BONUS_FILE_NAME = "shield_gold.png";
 std::string SHIELD_FILE_NAME = "shield3.png";
+const size_t THREE_LASERS_BONUS_DURATION{5000};
+const size_t SHIELD_MARGIN{ 10 };

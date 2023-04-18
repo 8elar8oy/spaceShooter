@@ -18,17 +18,14 @@ public:
 		window.draw(sprite);
 	}
 	
-	void activate();
-	bool isActive();
-	void deactivate();
+	
 	void setPosition(sf::Vector2f pos);
+sf::FloatRect getHitBox();
 private:
 	sf::Sprite sprite;
 	sf::Texture texture;
 	sf::Clock timer;
-	bool active = false;
 };
-void Shield:: activate() { active = true; }
-bool Shield::isActive() { return active; };
-void Shield::deactivate() { active = false; };
 void Shield::setPosition(sf::Vector2f pos) { sprite.setPosition(pos); };
+
+sf::FloatRect Shield::getHitBox() { return sprite.getGlobalBounds(); };

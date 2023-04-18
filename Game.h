@@ -34,14 +34,24 @@ private:
 	}
 
 	void checkCollisions() {
+		sf::FloatRect shieldHitBox = player.getShieldHitBox();
 		sf::FloatRect playerHitBox = player.getHitBox();
 		auto laserSprites = player.getLasers();
 		for (auto& meteor : meteorSprites) {
 
+
 			sf::FloatRect meteorHitBox = meteor->getHitBox();
+			if (player.ShieldIsActive()) {
+				if (meteorHitBox.intersects(shieldHitBox)) {
+					meteor->spawn();
+					player.decreaseShieldMargin();
+				}
+
+			}
 			if (meteorHitBox.intersects(playerHitBox)) {
 				meteor->spawn();
 				player.receiveDamage(meteor->getDamage());
+				
 			}
 
 			for (auto& laser : (*laserSprites)) {
