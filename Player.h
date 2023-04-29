@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "settings.h"
 #include "Lazers.h"
 #include <list>
@@ -24,8 +24,8 @@ private:
 	int prevShieldTime;
 	int ShieldMargin = SHIELD_MARGIN;
 public:
-	
-	Player() : hpText(std::to_string(hp), sf::Vector2f(0.f, 0.f)),shield(getCenterPosition()) {
+
+	Player() : hpText(std::to_string(hp), sf::Vector2f(0.f, 0.f)), shield(getCenterPosition()) {
 		texture.loadFromFile(IMAGES_FOLDER + PLAYER_FILE_NAME);
 		sprite.setTexture(texture);
 		bounds = sprite.getGlobalBounds();
@@ -38,11 +38,11 @@ public:
 		timer.restart();
 		prevFireTime = timer.getElapsedTime().asMilliseconds();
 	}
-	
+
 
 	void update() {
 		currTime = timer.getElapsedTime().asMilliseconds();
-		if (currTime - prevThreeLasersBonusTime >THREE_LASERS_BONUS_DURATION)
+		if (currTime - prevThreeLasersBonusTime > THREE_LASERS_BONUS_DURATION)
 		{
 			threeLasers = false;
 		}
@@ -58,7 +58,7 @@ public:
 			speedx = PLAYER_SPEED;
 		}
 		sprite.move(speedx, 0.f);
-		
+
 		sf::Vector2f playerPos = sprite.getPosition();
 		if (playerPos.x < 0) {
 			sprite.setPosition(0.f, playerPos.y);
@@ -82,7 +82,7 @@ public:
 			shield.setPosition(sf::Vector2f{ WINDOW_WIDTH / 2,WINDOW_HEIGHT + 100.f });
 		}
 	}
-	void activateShield() { 
+	void activateShield() {
 		ShieldActive = true;
 		ShieldMargin = SHIELD_MARGIN;
 		prevShieldTime = timer.getElapsedTime().asMilliseconds();
@@ -99,7 +99,7 @@ public:
 		for (auto laser : lasers) {
 			window.draw(laser->getSprite());
 		}
-		
+
 
 
 		window.draw(hpText.getText());
@@ -110,33 +110,33 @@ public:
 	void decScore() { score--; }
 	int getSpeed() { return speedx; }
 	void fire() {
-		
-		
-		if (currTime-prevFireTime > FIRE_COOLDOWN) {
+
+
+		if (currTime - prevFireTime > FIRE_COOLDOWN) {
 			sf::Vector2f centralLaserPos{ sprite.getPosition().x + bounds.width / 2,  sprite.getPosition().y };
 			Laser* centralLaser = new Laser(centralLaserPos);
 			lasers.push_back(centralLaser);
-			
-			if (threeLasers) {
-				
-				
-					sf::Vector2f leftLaserPos{ sprite.getPosition().x,
-					sprite.getPosition().y + bounds.height / 2 };
-					Laser* leftLaser = new Laser(leftLaserPos);
-					lasers.push_back(leftLaser);
 
-					sf::Vector2f rightLaserPos{ sprite.getPosition().x + bounds.width,
-					sprite.getPosition().y + bounds.height / 2 };
-					Laser* rightLaser = new Laser(rightLaserPos);
-					lasers.push_back(rightLaser);
+			if (threeLasers) {
+
+
+				sf::Vector2f leftLaserPos{ sprite.getPosition().x,
+				sprite.getPosition().y + bounds.height / 2 };
+				Laser* leftLaser = new Laser(leftLaserPos);
+				lasers.push_back(leftLaser);
+
+				sf::Vector2f rightLaserPos{ sprite.getPosition().x + bounds.width,
+				sprite.getPosition().y + bounds.height / 2 };
+				Laser* rightLaser = new Laser(rightLaserPos);
+				lasers.push_back(rightLaser);
 
 			}
 			prevFireTime = currTime;
 		}
 	}
-	
-	
-	
+
+
+
 	sf::FloatRect getShieldHitBox() { return shield.getHitBox(); };
 
 
@@ -147,15 +147,16 @@ public:
 	void incLives() { hp += 25; if (hp > 100) { hp = 100; } }
 	std::list<Laser*>* getLasers() { return &lasers; }
 	sf::Vector2f getPos() { return sprite.getPosition(); }
-	void activateThreeLasers() { threeLasers = true; 
-	prevThreeLasersBonusTime = timer.getElapsedTime().asMilliseconds();
+	void activateThreeLasers() {
+		threeLasers = true;
+		prevThreeLasersBonusTime = timer.getElapsedTime().asMilliseconds();
 	}
 	void deactivateThreeLasers() { threeLasers = false; }
-	sf::Vector2f getCenterPosition(); 
-	
+	sf::Vector2f getCenterPosition();
+
 
 };
-sf::Vector2f Player:: getCenterPosition() {
-	
-	return sf::Vector2f(bounds.left+ bounds.width / 2, bounds.top +bounds.height/ 2);
+sf::Vector2f Player::getCenterPosition() {
+
+	return sf::Vector2f(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
 }

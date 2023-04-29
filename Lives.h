@@ -21,4 +21,4 @@ public:
 
 	sf::Text getText() { return text; }
 
-};
+}; 

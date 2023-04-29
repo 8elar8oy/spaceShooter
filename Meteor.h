@@ -1,10 +1,9 @@
 #pragma once
 #include "settings.h"
-
-class Meteor {
+#include "gameObject.h"
+class Meteor: public GameObject {
 private:
-	sf::Sprite sprite;
-	sf::Texture texture;
+	
 	float speedx, speedy;
 	int damage;
 
@@ -30,9 +29,11 @@ public:
 		}
 	}
 
-	sf::Sprite getSprite() { return sprite; }
+	void draw(sf::RenderWindow& window) {
+		window.draw(sprite);
+	}
 
-	sf::FloatRect getHitBox() { return sprite.getGlobalBounds(); }
+	
 
 	void spawn() {
 		speedy = rand() % 6 + 2;
@@ -45,7 +46,6 @@ public:
 
 	int getDamage() { return damage; }
 
-	sf::Vector2f getPosition() { return sprite.getPosition(); }
 };
 
 std::string Meteor::mFileNames[] = { "meteorGrey_tiny1.png",	"meteorGrey_tiny2.png",

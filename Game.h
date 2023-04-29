@@ -6,11 +6,13 @@
 #include <vector>
 #include "Lives.h"
 #include "bonus.h"
+#include "gameObject.h"
 
 class Game {
 private:
 	sf::RenderWindow window;
 	Player player;
+	
 	std::vector<Meteor*> meteorSprites;
 	TextObj score;
 	sf::RectangleShape rect;
@@ -51,7 +53,7 @@ private:
 			if (meteorHitBox.intersects(playerHitBox)) {
 				meteor->spawn();
 				player.receiveDamage(meteor->getDamage());
-				
+
 			}
 
 			for (auto& laser : (*laserSprites)) {
@@ -88,7 +90,7 @@ private:
 	void draw() {
 		window.clear();
 		for (auto m : meteorSprites) {
-			window.draw(m->getSprite());
+			m->draw(window);
 		}
 		window.draw(rect);
 		player.draw(window);
